@@ -1,4 +1,4 @@
-export default function UserInfo({ action, textBtn }) {
+export default function UserInfo({ action, textBtn, userId }) {
 	return (
 		<div>
 			<h1>Please create an account, before continuing</h1>
@@ -14,7 +14,9 @@ export default function UserInfo({ action, textBtn }) {
 					<input name="bio" type="text" required />
 				</div>
 
-				{error && <p className="text-orange-700">{error}</p>}
+				<input name="clerk_id" type="text" hidden aria-hidden>
+					{userId}
+				</input>
 
 				<button type="submit">{textBtn}</button>
 			</form>

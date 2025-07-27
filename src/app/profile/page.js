@@ -3,7 +3,11 @@ import { db } from '@/utils/conn';
 import { auth } from '@clerk/nextjs/server';
 import { RedirectToSignUp } from '@clerk/nextjs';
 
+import UserInfo from '@/components/UserInfo';
+
 export default async function ProfilePage() {
+	const { userId } = await auth();
+
 	const res = await db.query(`SELECT * FROM users WHERE clerk_id = $1`, [
 		userId,
 	]);
@@ -12,7 +16,26 @@ export default async function ProfilePage() {
 
 	const userActive = res.rows.length > 0;
 
-	if (!userActive) return RedirectToSignUp();
+	async function handleNewSubmit(formData) {
+		'use server';
+
+		const { username, bio } = Object.fromEntries(formData);
+
+		await db.query(
+			`INSERT INTO users (username, bio, clerk_id) VALUES ($1, $2, $3)`,
+			[username, bio, userId]
+		);
+	}
+
+	if (!userActive) {
+		return (
+			<UserInfo
+				action={handleNewSubmit}
+				textBtn={`Create Account`}
+				userId={userId}
+			/>
+		);
+	}
 
 	return (
 		<div>

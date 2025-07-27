@@ -9,6 +9,8 @@ export default async function OnboardingPage() {
 	const { userId } = await auth();
 
 	const handleUserInfo = async (formData) => {
+		'use server';
+
 		const res = await handleSubmit(formData);
 
 		if (res?.message) {
