@@ -1,7 +1,6 @@
 import { db } from '@/utils/conn';
 
 import { auth } from '@clerk/nextjs/server';
-import { connect } from '@/utils/connect';
 import { RedirectToSignUp } from '@clerk/nextjs';
 
 export default async function ProfilePage() {
