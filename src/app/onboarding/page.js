@@ -4,7 +4,7 @@ import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import { completedOnboarding } from '@/utils/actions';
+import { handleSubmit } from '@/utils/actions';
 
 export default function OnboardingPage() {
 	const [error, setError] = useState('');
@@ -13,14 +13,12 @@ export default function OnboardingPage() {
 
 	const router = useRouter();
 
-	const handleSubmit = async () => {
-		const formData = new FormData();
-
-		const res = await completedOnboarding(formData);
+	const handleUserSubmit = async (formData) => {
+		const res = await handleSubmit(formData);
 
 		if (res?.message) {
 			await user?.reload();
-			router.push(`/profile`);
+			router.push(`/`);
 		}
 
 		if (res?.error) {
@@ -32,7 +30,7 @@ export default function OnboardingPage() {
 		<div>
 			<h1>Please create an account, before continuing</h1>
 
-			<form action={handleSubmit}>
+			<form action={handleUserSubmit}>
 				<div>
 					<label>Choose an username</label>
 					<input name="username" type="text" required />
