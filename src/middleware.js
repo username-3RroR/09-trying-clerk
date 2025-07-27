@@ -1,30 +1,31 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { redirect, RedirectType } from 'next/navigation';
 
 const isProtectedRoute = createRouteMatcher([`/profile(.*)`]);
 
-const isOnboardingRoute = createRouteMatcher([`/onboarding`]);
+// const isOnboardingRoute = createRouteMatcher([`/onboarding`]);
 
 export default clerkMiddleware(async (auth, req) => {
-	const { userId, sessionClaims, redirectToSignIn } = await auth();
+	// const { userId, sessionClaims, redirectToSignIn } = await auth();
 
 	// if the user is not signed in and route is protected, redirect to sign-in
-	if (!userId && isProtectedRoute(req)) {
-		return redirectToSignIn({ returnBackUrl: req.url });
-	}
+	// if (!userId && isProtectedRoute(req)) {
+	// 	return redirectToSignIn({ returnBackUrl: req.url });
+	// }
 
 	// catch and redirect users who do not have onboarding completed
-	if (userId && !sessionClaims?.metadata?.onboardingComplete) {
-		return new URL(`/onboarding`, req.url);
-	}
+	// if (userId && !sessionClaims?.metadata?.onboardingComplete) {
+	// 	return new URL(`/onboarding`, req.url);
+	// }
 
 	// if user is signed in and on a protected route, let them access it
-	if (userId && isProtectedRoute(req)) {
-		return auth.next();
-	}
-
-	// if (isProtectedRoute(req)) {
-	// 	await auth.protect();
+	// if (userId && isProtectedRoute(req)) {
+	// 	redirect('/profile', RedirectType.push);
 	// }
+
+	if (isProtectedRoute(req)) {
+		await auth.protect();
+	}
 });
 
 export const config = {
